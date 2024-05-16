@@ -639,7 +639,7 @@ workflow RNASEQ {
     // MODULE: Run Preseq
     //
     ch_preseq_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq) {
+    if (!params.skip_alignment && !params.skip_qc && !params.skip_preseq && !params.stop_at_quantif && !params.stop_at_stringtie) {
         PRESEQ_LCEXTRAP (
             ch_genome_bam
         )
@@ -651,7 +651,7 @@ workflow RNASEQ {
     // SUBWORKFLOW: Mark duplicate reads
     //
     ch_markduplicates_multiqc = Channel.empty()
-    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi) {
+    if (!params.skip_alignment && !params.skip_markduplicates && !params.with_umi && !params.stop_at_quantif) {
         BAM_MARKDUPLICATES_PICARD (
             ch_genome_bam,
             PREPARE_GENOME.out.fasta.map { [ [:], it ] },
@@ -672,7 +672,7 @@ workflow RNASEQ {
     //
     // MODULE: STRINGTIE
     //
-    if (!params.skip_alignment && !params.skip_stringtie) {
+    if (!params.skip_alignment && !params.skip_stringtie && !params.stop_at_quantif) {
         STRINGTIE_STRINGTIE (
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
@@ -716,7 +716,7 @@ workflow RNASEQ {
     //
     // MODULE: Genome-wide coverage with BEDTools
     //
-    if (!params.skip_alignment && !params.skip_bigwig) {
+    if (!params.skip_alignment && !params.skip_bigwig && !params.stop_at_quantif) {
 
         BEDTOOLS_GENOMECOV (
             ch_genome_bam
@@ -753,7 +753,7 @@ workflow RNASEQ {
     ch_fail_strand_multiqc        = Channel.empty()
     ch_tin_multiqc                = Channel.empty()
     if (!params.skip_alignment && !params.skip_qc) {
-        if (!params.skip_qualimap) {
+        if (!params.skip_qualimap && (!params.stop_at_quantif && !params.stop_at_stringtie))  {
             QUALIMAP_RNASEQ (
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf.map { [ [:], it ] }
@@ -762,7 +762,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(QUALIMAP_RNASEQ.out.versions.first())
         }
 
-        if (!params.skip_dupradar) {
+        if (!params.skip_dupradar && (!params.stop_at_quantif && !params.stop_at_stringtie)) {
             DUPRADAR (
                 ch_genome_bam,
                 PREPARE_GENOME.out.gtf
@@ -771,7 +771,7 @@ workflow RNASEQ {
             ch_versions = ch_versions.mix(DUPRADAR.out.versions.first())
         }
 
-        if (!params.skip_rseqc && rseqc_modules.size() > 0) {
+        if ((!params.skip_rseqc && (!params.stop_at_quantif && !params.stop_at_stringtie)) && rseqc_modules.size() > 0) {
             BAM_RSEQC (
                 ch_genome_bam.join(ch_genome_bam_index, by: [0]),
                 PREPARE_GENOME.out.gene_bed,
@@ -865,7 +865,7 @@ workflow RNASEQ {
     //
     // MODULE: MultiQC
     //
-    if (!params.skip_multiqc) {
+    if (!params.skip_multiqc && (!params.stop_at_quantif && !params.stop_at_stringtie)) {
         workflow_summary    = WorkflowRnaseq.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 

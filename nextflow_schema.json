@@ -524,7 +524,7 @@
             "title": "Process skipping options",
             "type": "object",
             "fa_icon": "fas fa-fast-forward",
-            "description": "Options to skip various steps within the workflow.",
+            "description": "Options to skip various steps or to stop at steps within the workflow.",
             "properties": {
                 "skip_gtf_filter": {
                     "type": "boolean",
@@ -624,6 +624,14 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
                     "description": "Skip all QC steps except for MultiQC."
+                },
+                "stop_at_quantif": {
+                    "type": "boolean",
+                    "description": "Stop the pipeline after transcrits quantification step."
+                },
+                "stop_at_stringtie": {
+                    "type": "boolean",
+                    "description": "Stop the pipeline after stringtie step."
                 }
             }
         },
