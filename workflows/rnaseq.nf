@@ -859,7 +859,7 @@ workflow RNASEQ {
     //
     // MODULE: Remove bam files
 
-    if (params.stop_at_quantif || params.stop_at_stringtie) {
+    if (params.remove_bam_files) {
             REMOVE_BAM_FILES (
                 ch_genome_bam,
                 ch_genome_bam_index
