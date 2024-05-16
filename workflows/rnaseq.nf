@@ -112,6 +112,7 @@ include { DUPRADAR                           } from '../modules/local/dupradar'
 include { MULTIQC                            } from '../modules/local/multiqc'
 include { MULTIQC_CUSTOM_BIOTYPE             } from '../modules/local/multiqc_custom_biotype'
 include { UMITOOLS_PREPAREFORRSEM as UMITOOLS_PREPAREFORSALMON } from '../modules/local/umitools_prepareforrsem'
+include { REMOVE_BAM_FILES                   } from '../modules/local/remove_bam_files'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -855,6 +856,15 @@ workflow RNASEQ {
         }
     }
     
+    //
+    // MODULE: Remove bam files
+
+    if (params.stop_at_quantif || params.stop_at_stringtie) {
+            REMOVE_BAM_FILES (
+                ch_genome_bam,
+                ch_genome_bam_index
+            )
+        }
     //
     // MODULE: Pipeline reporting
     //
