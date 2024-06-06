@@ -1,6 +1,7 @@
 process TX2GENE {
     tag "$gtf"
     label "process_low"
+    label 'base'
 
     conda "conda-forge::python=3.9.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
