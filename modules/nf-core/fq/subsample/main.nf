@@ -1,6 +1,7 @@
 process FQ_SUBSAMPLE {
     tag "$meta.id"
     label 'process_single'
+    label 'salmon'
 
     conda "bioconda::fq=0.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

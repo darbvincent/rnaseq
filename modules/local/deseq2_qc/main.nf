@@ -1,5 +1,6 @@
 process DESEQ2_QC {
     label "process_medium"
+    label "deseq2"
 
     // (Bio)conda packages have intentionally not been pinned to a specific version
     // This was to avoid the pipeline failing due to package conflicts whilst creating the environment when using -profile conda

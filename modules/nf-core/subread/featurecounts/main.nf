@@ -1,6 +1,7 @@
 process SUBREAD_FEATURECOUNTS {
     tag "$meta.id"
     label 'process_medium'
+    label 'featurecounts'
 
     conda "bioconda::subread=2.0.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

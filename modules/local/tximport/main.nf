@@ -1,5 +1,6 @@
 process TXIMPORT {
     label "process_medium"
+    label 'base'
 
     conda "bioconda::bioconductor-tximeta=1.12.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

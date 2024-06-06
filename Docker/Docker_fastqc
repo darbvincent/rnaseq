@@ -1,0 +1,38 @@
+# Start from the Ubuntu base image
+FROM ubuntu:latest
+
+# Install dependencies and AWS CLI
+RUN apt-get update && \
+    apt-get install -y curl unzip && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    /opt/miniconda/bin/conda init
+
+# Set up Conda environment variables
+ENV PATH="/opt/miniconda/bin:$PATH"
+ENV CONDA_AUTO_UPDATE_CONDA=false
+
+# Copy the environment file from the host to the container
+COPY --chown=root:root env/fastqc.yml /tmp/env.yml
+
+# Create the environment using Conda
+RUN /opt/miniconda/bin/conda env create -f /tmp/env.yml && \
+    /opt/miniconda/bin/conda clean --all --yes
+
+# Ensure the Conda environment is activated in non-interactive shells
+RUN echo "source /opt/miniconda/bin/activate fastqc" >> /etc/profile.d/conda.sh
+
+# Set the PATH to include Conda and AWS CLI
+ENV PATH="/opt/miniconda/envs/fastqc/bin:/opt/miniconda/bin:/usr/local/bin/aws:$PATH"
+
+# Verify the installation of AWS CLI and FastQC
+RUN aws --version
+RUN fastqc --version

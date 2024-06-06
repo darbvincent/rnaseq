@@ -1,6 +1,7 @@
 process RSEM_PREPAREREFERENCE {
     tag "$fasta"
     label 'process_high'
+    label 'star'
 
     conda "bioconda::rsem=1.3.3 bioconda::star=2.7.10a"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
