@@ -1,6 +1,7 @@
 process STRINGTIE_STRINGTIE {
     tag "$meta.id"
     label 'process_medium'
+    label 'stringtie'
 
     conda "bioconda::stringtie=2.2.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
