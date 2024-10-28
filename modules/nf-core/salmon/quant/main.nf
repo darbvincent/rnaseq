@@ -1,6 +1,6 @@
 process SALMON_QUANT {
     tag "$meta.id"
-    label "process_medium"
+    label "process_high"
     label "salmon"
 
     conda "bioconda::salmon=1.10.1"

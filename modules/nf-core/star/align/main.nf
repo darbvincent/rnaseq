@@ -1,6 +1,6 @@
 process STAR_ALIGN {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_align'
     label 'star'
 
     conda "bioconda::star=2.7.10a bioconda::samtools=1.16.1 conda-forge::gawk=5.1.0"
